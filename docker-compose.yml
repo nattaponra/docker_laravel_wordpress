@@ -52,7 +52,7 @@ services:
         volumes:
             - ./dockers/mysql/db/data:/bitnami/mysql
         environment:
-            - ALLOW_EMPTY_PASSWORD=yes
+            - MYSQL_ROOT_PASSWORD=root
             - MYSQL_USER=my_user
             - MYSQL_PASSWORD=my_password
             - MYSQL_DATABASE=my_database
