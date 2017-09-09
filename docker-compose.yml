@@ -13,8 +13,7 @@ services:
 
         volumes:
             - ./dockers/load_balancer/logs:/opt/bitnami/nginx/logs
-            - ./dockers/load_balancer/nginx:/bitnami/nginx
-
+            - ./dockers/load_balancer/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
     laravel:
         image: bitnami/nginx
 
@@ -22,7 +21,7 @@ services:
             - phpfpm_laravel
         volumes:
             - ./dockers/laravel/logs:/opt/bitnami/nginx/logs
-            - ./dockers/laravel/nginx:/bitnami/nginx
+            - ./dockers/laravel/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
             - ./laravel:/app:consistent
 
     phpfpm_laravel:
@@ -38,7 +37,7 @@ services:
             - phpfpm_wordpress
         volumes:
             - ./dockers/wordpress/logs:/opt/bitnami/nginx/logs
-            - ./dockers/wordpress/nginx:/bitnami/nginx
+            - ./dockers/wordpress/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
             - ./wordpress:/app:consistent
 
     phpfpm_wordpress:
