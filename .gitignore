@@ -1,11 +1,2 @@
 /.idea
-/dockers/
-!/dockers/laravel/nginx/conf/vhosts/app.conf
-!/dockers/laravel/phpfpm/conf/php.ini
-!/dockers/load_balancer/nginx/conf/vhosts/app.conf
-!/dockers/wordpress/nginx/conf/vhosts/app.conf
-!/dockers/wordpress/phpfpm/conf/php.ini
-/laravel/
-/wordpress/
-
 
