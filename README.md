@@ -11,3 +11,30 @@ PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI implementation w
 MySQL is an open-source relational database management system (RDBMS).Its name is a combination of "My", the name of co-founder Michael Widenius's daughter, and "SQL", the abbreviation for Structured Query Language. The MySQL development project has made its source code available under the terms of the GNU General Public License,
 ## 4. phpMyAdmin
 phpMyAdmin is a free software tool written in PHP, intended to handle the administration of MySQL over the Web. phpMyAdmin supports a wide range of operations on MySQL and MariaDB. Frequently used operations (managing databases, tables, columns, relations, indexes, users, permissions, etc) 
+
+
+# How to use it?
+## Step 1: Install docker first.
+You can read how to install docker in docker official website follow below link
+https://docs.docker.com/engine/installation/ 
+
+## Step 2:Clone a docker_laravel_wordpress to your computer.
+Clone by HTTPS:
+```
+https://github.com/nattaponra/docker_laravel_wordpress.git
+```
+Clone by Git clone:
+```
+git clone https://github.com/nattaponra/docker_laravel_wordpress.git
+```
+
+If you finish clone,you will see these files.
+* docker-compose.mly
+* dockers
+
+## Step 3: Changes docker directory mode to allow docker use volumes.
+
+```
+cd docker_laravel_wordpress
+chmod -R g+rwX dockers
+```
