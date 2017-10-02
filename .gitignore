@@ -1,2 +1,7 @@
 /.idea
-
+containers
+!/containers/laravel_app/nginx/conf/vhosts/app.conf
+!/containers/laravel_app/phpfpm/conf/php.ini
+!/containers/load_balancer/nginx/conf/vhosts/app.conf
+!/containers/wordpress_app/nginx/conf/vhosts/app.conf
+!/containers/wordpress_app/phpfpm/conf/php.ini

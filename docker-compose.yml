@@ -1,67 +1,110 @@
 version: '2'
 
 services:
+    ############# Load balancer #############
     load_balancer:
         image: bitnami/nginx
         ports:
             - 80:8080
             - 443:8443
         depends_on:
-            - laravel
-            - wordpress
-            - phpmyadmin
-
+            - laravel_app
+            - wordpress_app
+            - phpmyadmin_laravel
+            - phpmyadmin_wordpress
         volumes:
-            - ./dockers/load_balancer/logs:/opt/bitnami/nginx/logs
-            - ./dockers/load_balancer/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
-    laravel:
+            - ./containers/load_balancer/nginx/logs:/opt/bitnami/nginx/logs
+            - ./containers/load_balancer/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
+            - ./containers/certs:/bitnami/nginx/conf/bitnami/certs
+    #########################################
+
+
+
+    ############# Laravel App ###############
+
+    # 1.nginx web server
+    laravel_app:
         image: bitnami/nginx
 
         depends_on:
             - phpfpm_laravel
         volumes:
-            - ./dockers/laravel/logs:/opt/bitnami/nginx/logs
-            - ./dockers/laravel/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
-            - ./laravel:/app:consistent
-
+            - ./containers/laravel_app/nginx/logs:/opt/bitnami/nginx/logs
+            - ./containers/laravel_app/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
+            - ./containers/certs:/bitnami/nginx/conf/bitnami/certs
+            - ./app/laravel:/app:consistent
+    # 2.PHP
     phpfpm_laravel:
         image: bitnami/php-fpm
         volumes:
-            - ./dockers/laravel/phpfpm:/bitnami/php-fpm
-            - ./laravel:/app:consistent
-
-    wordpress:
-        image: bitnami/nginx
-
-        depends_on:
-            - phpfpm_wordpress
-        volumes:
-            - ./dockers/wordpress/logs:/opt/bitnami/nginx/logs
-            - ./dockers/wordpress/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
-            - ./wordpress:/app:consistent
-
-    phpfpm_wordpress:
-        image: bitnami/php-fpm
-        volumes:
-            - ./dockers/wordpress/phpfpm:/bitnami/php-fpm
-            - ./wordpress:/app:consistent
-
-
-    mysql:
+            - ./containers/laravel_app/phpfpm:/bitnami/php
+            - ./app/laravel:/app:consistent
+    # 3.Mysql
+    mysql_laravel:
         image: bitnami/mysql
         volumes:
-            - ./dockers/mysql/db/data:/bitnami/mysql
+            - ./containers/laravel_app/mysql/db/data:/bitnami
         environment:
             - MYSQL_ROOT_PASSWORD=root
             - MYSQL_USER=my_user
             - MYSQL_PASSWORD=my_password
             - MYSQL_DATABASE=my_database
-
-    phpmyadmin:
+    # 4.phpmyadmin
+    phpmyadmin_laravel:
         image: phpmyadmin/phpmyadmin
         restart: always
+        ports:
+            - 8001:80
         depends_on:
-            - mysql
+            - mysql_laravel
         environment:
             MYSQL_USERNAME: root
-            PMA_HOST: mysql
+            PMA_HOST: mysql_laravel
+    #########################################
+
+
+
+
+
+    ############# Wordpress App #############
+    # 1.nginx web server
+    wordpress_app:
+        image: bitnami/nginx
+
+        depends_on:
+            - phpfpm_wordpress
+        volumes:
+            - ./containers/wordpress_app/nginx/logs:/opt/bitnami/nginx/logs
+            - ./containers/wordpress_app/nginx/conf/vhosts:/bitnami/nginx/conf/vhosts
+            - ./containers/certs:/bitnami/nginx/conf/bitnami/certs
+            - ./app/wordpress:/app:consistent
+
+    # 2.PHP
+    phpfpm_wordpress:
+        image: bitnami/php-fpm
+        volumes:
+            - ./containers/wordpress_app/phpfpm:/bitnami/php
+            - ./app/wordpress:/app:consistent
+
+    # 3.Mysql
+    mysql_wordpress:
+        image: bitnami/mysql
+        volumes:
+            - ./containers/wordpress_app/mysql/db/data:/bitnami
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_USER=my_user
+            - MYSQL_PASSWORD=my_password
+            - MYSQL_DATABASE=my_database
+    # 4.phpmyadmin
+    phpmyadmin_wordpress:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - 8002:80
+        restart: always
+        depends_on:
+            - mysql_wordpress
+        environment:
+            MYSQL_USERNAME: root
+            PMA_HOST: mysql_wordpress
+    #########################################

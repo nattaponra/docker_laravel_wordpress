@@ -1,0 +1,1 @@
+<h1><?php echo "Hello!!,This is wordpress app"; ?></h1>
